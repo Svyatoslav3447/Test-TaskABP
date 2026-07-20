@@ -13,16 +13,31 @@ function CommentForm({ onAddReview }: CommentFormProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (reviewerName === "" || comment === "") {
-      alert("Fill in all fields.");
+    if (!reviewerName.trim()) {
+      alert("Enter your name.");
       return;
     }
 
-    const newReview = {
-      reviewerName: reviewerName,
+    if (!comment.trim()) {
+      alert("Enter your review.");
+      return;
+    }
+
+    if (reviewerName.length > 30) {
+      alert("Name must not exceed 30 characters.");
+      return;
+    }
+
+    if (comment.length > 300) {
+      alert("Review must not exceed 300 characters.");
+      return;
+    }
+
+    const newReview: Review = {
+      reviewerName,
       reviewerEmail: "",
-      rating: rating,
-      comment: comment,
+      rating,
+      comment,
       date: new Date().toISOString(),
     };
 
@@ -40,7 +55,8 @@ function CommentForm({ onAddReview }: CommentFormProps) {
       <div className="comment-form__row">
         <input
           type="text"
-          placeholder="Ваше ім'я"
+          maxLength={30}
+          placeholder="Your name"
           value={reviewerName}
           onChange={(e) => setReviewerName(e.target.value)}
         />
@@ -58,6 +74,7 @@ function CommentForm({ onAddReview }: CommentFormProps) {
       </div>
 
       <textarea
+        maxLength={300}
         placeholder="Your review"
         value={comment}
         onChange={(e) => setComment(e.target.value)}

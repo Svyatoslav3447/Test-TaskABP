@@ -34,6 +34,12 @@ function VehiclePage() {
 
       const data = await getVehicle(id);
 
+      const savedReviews = localStorage.getItem(`reviews-${data.id}`);
+
+      if (savedReviews) {
+        data.reviews = JSON.parse(savedReviews);
+      }
+
       setVehicle(data);
       setActiveImage(data.thumbnail);
 
@@ -52,10 +58,17 @@ function VehiclePage() {
   function handleAddReview(review: Review) {
     if (!vehicle) return;
 
+    const updatedReviews = [review, ...vehicle.reviews];
+
     setVehicle({
       ...vehicle,
-      reviews: [review, ...vehicle.reviews],
+      reviews: updatedReviews,
     });
+
+    localStorage.setItem(
+      `reviews-${vehicle.id}`,
+      JSON.stringify(updatedReviews),
+    );
   }
 
   function handleFavorite() {
